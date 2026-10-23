@@ -201,11 +201,17 @@
                 <p id="scan-status" style="margin-top: 15px; font-weight: bold;"></p>
             </div>
 
+            <!-- ANÁLISE PERSONALIZADA COM BOTÃO SELETOR -->
             <div class="card">
                 <h3>Análise Personalizada</h3>
-                <p style="color: var(--text-dim); font-size: 0.85rem;">Insira o caminho completo para a pasta ou ficheiro a analisar:</p>
-                <input type="text" id="custom-path-input" placeholder="C:\Users\Nome\Desktop\ficheiro.exe">
-                <button class="btn-neon" onclick="runCustomScan()">Iniciar Análise</button>
+                <p style="color: var(--text-dim); font-size: 0.85rem;">Selecione um ficheiro ou pasta no seu computador para analisar:</p>
+                
+                <!-- Input invisível para abrir a janela de diálogo do explorador -->
+                <input type="file" id="file-selector" style="display: none;" onchange="handleFileSelected(event)">
+                
+                <button class="btn-neon" onclick="document.getElementById('file-selector').click()">📂 Selecionar Ficheiro</button>
+                <span id="selected-file-path" style="margin-left: 10px; color: var(--text-dim); font-size: 0.85rem;">Nenhum ficheiro selecionado</span>
+                
                 <p id="custom-scan-status" style="margin-top: 15px; font-weight: bold;"></p>
             </div>
         </div>
@@ -339,16 +345,16 @@
             progressBox.style.display = 'block';
             progressBar.style.width = '5%';
             status.style.color = "var(--neon-purple-glow)";
-            status.innerText = type === 'quick' ? "Análise Rápida a decorrer..." : "Análise Completa a decorrer...";
+            status.innerText = type === 'quick' ? "Análise Rápida a decorrer (Downloads)..." : "Análise Completa do sistema a decorrer...";
 
             let progress = 5;
             let progressInterval = setInterval(() => {
                 if (progress < 90) {
-                    progress += Math.floor(Math.random() * 8) + 2;
+                    progress += Math.floor(Math.random() * 4) + 1;
                     if (progress > 90) progress = 90;
                     progressBar.style.width = progress + '%';
                 }
-            }, 150);
+            }, 300);
 
             let res = type === 'quick' ? await eel.run_quick_scan()() : await eel.run_full_scan()();
 
@@ -363,19 +369,23 @@
             }, 350);
         }
 
-        async function runCustomScan() {
-            let path = document.getElementById('custom-path-input').value;
-            let status = document.getElementById('custom-scan-status');
-            if (!path) {
-                status.style.color = "var(--neon-red)";
-                status.innerText = "Por favor, introduza um caminho válido.";
-                return;
+        async function handleFileSelected(event) {
+            let fileInput = event.target;
+            if (fileInput.files.length > 0) {
+                let file = fileInput.files[0];
+                // Caminho absoluto obtido através da API do browser
+                let filePath = file.path || file.name;
+                
+                document.getElementById('selected-file-path').innerText = file.name;
+                let status = document.getElementById('custom-scan-status');
+                
+                status.style.color = "var(--neon-purple-glow)";
+                status.innerText = "A analisar ficheiro selecionado...";
+                
+                let res = await eel.run_custom_scan(filePath)();
+                status.style.color = res.threats_found > 0 ? "var(--neon-red)" : "var(--neon-green)";
+                status.innerText = res.message;
             }
-            status.style.color = "var(--neon-purple-glow)";
-            status.innerText = "A analisar caminho...";
-            let res = await eel.run_custom_scan(path)();
-            status.style.color = res.threats_found > 0 ? "var(--neon-red)" : "var(--neon-green)";
-            status.innerText = res.message;
         }
 
         async function runCleaner() {
@@ -469,7 +479,7 @@
         }
 
         async function loadConnections() {
-            let tbody = document.getElementById('net-table-body');
+            let tbody = document.getElementById('net-task-body') || document.getElementById('net-table-body');
             tbody.innerHTML = '<tr><td colspan="5">A carregar ligações...</td></tr>';
             let conns = await eel.get_active_connections()();
             tbody.innerHTML = '';
