@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Neon Security Suite</title>
+    <script type="text/javascript" src="/eel.js"></script>
+    <style>
+        :root {
+            --bg-color: #0b0c10;
+            --sidebar-bg: #12141d;
+            --card-bg: #1f2833;
+            --neon-purple: #9d4edd;
+            --neon-glow: #c77dff;
+            --neon-green: #00ff66;
+            --neon-blue: #3a86ff;
+            --neon-yellow: #ffcc00;
+            --text-color: #ffffff;
+            --text-muted: #c5c6c7;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Menu Lateral (Sidebar) */
+        .sidebar {
+            width: 240px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid rgba(157, 78, 221, 0.2);
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+        }
+
+        .brand {
+            padding: 0 20px 20px 20px;
+            border-bottom: 1px solid rgba(157, 78, 221, 0.2);
+        }
+
+        .brand h1 {
+            margin: 0;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+        }
+
+        .brand h1 span {
+            color: var(--neon-glow);
+            text-shadow: 0 0 10px var(--neon-purple);
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 15px 0;
+            margin: 0;
+        }
+
+        .nav-item {
+            padding: 12px 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: 0.2s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: #fff;
+            background-color: rgba(157, 78, 221, 0.1);
+            border-left-color: var(--neon-purple);
+        }
+
+        .nav-item.active {
+            color: var(--neon-glow);
+        }
+
+        /* Conteúdo Principal */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 25px;
+            overflow-y: auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 1px solid rgba(157, 78, 221, 0.2);
+            padding-bottom: 15px;
+        }
+
+        .section-page {
+            display: none;
+            flex: 1;
+        }
+
+        .section-page.active {
+            display: block;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--neon-purple);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(157, 78, 221, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 0.9rem;
+            color: var(--neon-glow);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(157, 78, 221, 0.3);
+            padding-bottom: 5px;
+        }
+
+        .status-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 4px solid var(--neon-green);
+            box-shadow: 0 0 15px var(--neon-green);
+            margin: 10px auto 20px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 0.85rem;
+            color: var(--neon-green);
+        }
+
+        .action-btn {
+            background-color: transparent;
+            color: var(--neon-glow);
+            border: 2px solid var(--neon-purple);
+            padding: 10px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 0 8px var(--neon-purple);
+            transition: 0.2s ease-in-out;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .action-btn:hover {
+            background-color: var(--neon-purple);
+            color: #fff;
+            box-shadow: 0 0 15px var(--neon-glow);
+        }
+
+        .vpn-btn {
+            border-color: var(--neon-blue);
+            color: #4cc9f0;
+            box-shadow: 0 0 8px var(--neon-blue);
+        }
+
+        .vpn-btn:hover {
+            background-color: var(--neon-blue);
+            color: #fff;
+        }
+
+        .clean-btn {
+            border-color: var(--neon-yellow);
+            color: #ffda33;
+            box-shadow: 0 0 8px var(--neon-yellow);
+        }
+
+        .clean-btn:hover {
+            background-color: var(--neon-yellow);
+            color: #0b0c10;
+        }
+
+        input[type="text"], input[type="password"], select {
+            width: 96%;
+            padding: 8px;
+            margin-top: 6px;
+            background: #0b0c10;
+            border: 1px solid var(--neon-purple);
+            color: #fff;
+            border-radius: 6px;
+            font-size: 0.8rem;
+        }
+
+        /* Estilos da Barra de Progresso Néon */
+        .progress-container {
+            width: 100%;
+            background-color: #0b0c10;
+            border-radius: 10px;
+            border: 1px solid var(--neon-purple);
+            overflow: hidden;
+            margin-top: 15px;
+            display: none; /* Oculta por predefinição */
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 12px;
+            background: linear-gradient(90deg, var(--neon-purple), var(--neon-glow), var(--neon-green));
+            box-shadow: 0 0 10px var(--neon-glow);
+            transition: width 0.2s ease;
+        }
+
+        #output {
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            background: #0b0c10;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px dashed var(--neon-purple);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Menu -->
+    <div class="sidebar">
+        <div class="brand">
+            <h1><span>NEON</span> SECURITY</h1>
+            <span style="font-size: 0.65rem; color: var(--text-muted);">Suite de Proteção v2.0</span>
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item active" onclick="mostrarPagina('dashboard', this)">🏠 Visão Geral</li>
+            <li class="nav-item" onclick="mostrarPagina('antivirus', this)">🛡️ Motor Antivírus</li>
+            <li class="nav-item" onclick="mostrarPagina('vpn', this)">🌐 Rede & VPN</li>
+            <li class="nav-item" onclick="mostrarPagina('passwords', this)">🔑 Passwords & Leaks</li>
+            <li class="nav-item" onclick="mostrarPagina('cleaner', this)">🧹 Otimização de PC</li>
+            <li class="nav-item" onclick="mostrarPagina('phishing', this)">🎣 Deteção de Phishing</li>
+        </ul>
+    </div>
+
+    <!-- Conteúdo das Páginas -->
+    <div class="main-content">
+        <header>
+            <h2 id="page-title" style="margin: 0; font-size: 1.2rem;">Painel Principal</h2>
+            <div style="font-size: 0.8rem; color: var(--neon-green); font-weight: bold;">● Sistema Protegido</div>
+        </header>
+
+        <!-- Página 1: Dashboard -->
+        <div id="dashboard" class="section-page active">
+            <div class="card" style="text-align: center;">
+                <div class="status-circle" id="status-text">PROTEGIDO</div>
+                <h3 style="margin-top: 0;">O seu sistema está seguro e protegido.</h3>
+                <p style="color: var(--text-muted); font-size: 0.8rem;">Todas as proteções do Neon Security estão operacionais em segundo plano.</p>
+                <div style="display: flex; gap: 15px; margin-top: 20px;">
+                    <button class="action-btn" onclick="iniciarVerificacao('quick')">⚡ Verificação Rápida</button>
+                    <button class="action-btn" onclick="iniciarVerificacao('full')">🔍 Verificação Completa</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Página 2: Antivírus -->
+        <div id="antivirus" class="section-page">
+            <div class="card">
+                <div class="card-title">Análise de Sistema & Personalizada</div>
+                <p style="font-size: 0.8rem; color: var(--text-muted);">Verifique o sistema completo ou escolha uma diretoria específica para procurar malware e scripts maliciosos.</p>
+                <button class="action-btn" onclick="iniciarVerificacao('quick')">⚡ Verificação Rápida</button>
+                <button class="action-btn" onclick="iniciarVerificacao('full')">🔍 Verificação Completa</button>
+                <div style="margin-top: 15px;">
+                    <input type="text" id="customPath" placeholder="Caminho para análise personalizada (ex: C:\MinhaPasta ou D:\)">
+                    <button class="action-btn" onclick="iniciarVerificacao('custom')">📂 Executar Verificação Personalizada</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Página 3: VPN -->
+        <div id="vpn" class="section-page">
+            <div class="card">
+                <div class="card-title">VPN Neon & Encriptação de Rede</div>
+                <p style="font-size: 0.8rem; color: var(--text-muted);">Especifique o país do servidor para mascarar o seu IP e encriptar todo o tráfego da rede.</p>
+                <label style="font-size: 0.8rem;">Selecione o Servidor:</label>
+                <select id="vpnCountry">
+                    <option value="Portugal">🇵🇹 Portugal (Servidor Lisboa)</option>
+                    <option value="Espanha">🇪🇸 Espanha (Servidor Madrid)</option>
+                    <option value="Alemanha">🇩🇪 Alemanha (Servidor Frankfurt)</option>
+                    <option value="EUA">🇺🇸 EUA (Servidor Nova Iorque)</option>
+                </select>
+                <button class="action-btn vpn-btn" id="vpnBtn" onclick="alternarVpn()" style="margin-top: 15px;">🔒 Ligar VPN Neon</button>
+            </div>
+        </div>
+
+        <!-- Página 4: Passwords & Leaks -->
+        <div id="passwords" class="section-page">
+            <div class="card">
+                <div class="card-title">Gestor de Passwords Encriptado</div>
+                <input type="text" id="pwdService" placeholder="Serviço (ex: Gmail)">
+                <input type="text" id="pwdUser" placeholder="Utilizador / Email">
+                <input type="password" id="pwdPass" placeholder="Password secreta">
+                <button class="action-btn" onclick="adicionarPassword()">Guardar Credencial Segura</button>
+            </div>
+            <div class="card">
+                <div class="card-title">Guardião de Fugas (Dark Web)</div>
+                <input type="text" id="emailInput" placeholder="Insira o seu email para pesquisa...">
+                <button class="action-btn" onclick="verificarEmail()">Pesquisar Vazamentos na Dark Web</button>
+            </div>
+        </div>
+
+        <!-- Página 5: Cleaner -->
+        <div id="cleaner" class="section-page">
+            <div class="card">
+                <div class="card-title">Otimizador de Espaço em Disco</div>
+                <p style="font-size: 0.8rem; color: var(--text-muted);">Remove ficheiros temporários, cache do sistema e ficheiros residuais para libertar armazenamento e melhorar a velocidade.</p>
+                <button class="action-btn clean-btn" onclick="executarLimpeza()">🗑️ Iniciar Limpeza de Ficheiros Temporários</button>
+            </div>
+        </div>
+
+        <!-- Página 6: Phishing -->
+        <div id="phishing" class="section-page">
+            <div class="card">
+                <div class="card-title">Deteção Inteligente de Phishing</div>
+                <p style="font-size: 0.8rem; color: var(--text-muted);">Cole um endereço URL ou o texto de um email suspeito para verificar padrões de burla cibernética.</p>
+                <input type="text" id="phishingInput" placeholder="Cole aqui o link ou o conteúdo da mensagem suspeita...">
+                <button class="action-btn" onclick="verificarPhishing()">Analisar com Motor Anti-Phishing</button>
+            </div>
+        </div>
+
+        <!-- Barra de Progresso e Consola de Saída -->
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div id="output">Sistema operacional e pronto para ações.</div>
+    </div>
+
+    <script>
+        let vpnEstado = "off";
+
+        function mostrarPagina(paginaId, elementoMenu) {
+            let paginas = document.querySelectorAll('.section-page');
+            paginas.forEach(p => p.classList.remove('active'));
+
+            let itensMenu = document.querySelectorAll('.nav-item');
+            itensMenu.forEach(item => item.classList.remove('active'));
+
+            document.getElementById(paginaId).classList.add('active');
+            elementoMenu.classList.add('active');
+
+            document.getElementById('page-title').innerText = elementoMenu.innerText;
+        }
+
+        // Função para animar a barra de progresso
+        function simularProgresso(tempoTotalMs, aoTerminar) {
+            let container = document.getElementById("progressContainer");
+            let bar = document.getElementById("progressBar");
+            container.style.display = "block";
+            bar.style.width = "0%";
+
+            let progresso = 0;
+            let intervaloTempo = 50;
+            let incremento = (100 / (tempoTotalMs / intervaloTempo));
+
+            let timer = setInterval(() => {
+                progresso += incremento;
+                if (progresso >= 100) {
+                    progresso = 100;
+                    bar.style.width = progresso + "%";
+                    clearInterval(timer);
+                    setTimeout(() => {
+                        container.style.display = "none";
+                        bar.style.width = "0%";
+                        if (aoTerminar) aoTerminar();
+                    }, 400);
+                } else {
+                    bar.style.width = progresso + "%";
+                }
+            }, intervaloTempo);
+        }
+
+        async function iniciarVerificacao(tipo) {
+            let outputDiv = document.getElementById("output");
+            let statusCircle = document.getElementById("status-text");
+            let caminhoCustom = document.getElementById("customPath") ? document.getElementById("customPath").value : "";
+
+            outputDiv.innerText = "A inicializar motor anti-malware...";
+            statusCircle.style.borderColor = "#ffcc00";
+            statusCircle.style.color = "#ffcc00";
+            statusCircle.innerText = "A VARRER";
+
+            simularProgresso(2500, async () => {
+                let resposta = await eel.executar_scan(tipo, caminhoCustom)();
+                outputDiv.innerText = resposta;
+                statusCircle.style.borderColor = "#00ff66";
+                statusCircle.style.color = "#00ff66";
+                statusCircle.innerText = "PROTEGIDO";
+            });
+        }
+
+        async function executarLimpeza() {
+            let outputDiv = document.getElementById("output");
+            outputDiv.innerText = "A analisar e a remover ficheiros temporários...";
+
+            simularProgresso(1800, async () => {
+                let resposta = await eel.limpar_sistema()();
+                outputDiv.innerText = resposta;
+            });
+        }
+
+        async function alternarVpn() {
+            let outputDiv = document.getElementById("output");
+            let vpnBtn = document.getElementById("vpnBtn");
+            let paisSelecionado = document.getElementById("vpnCountry").value;
+
+            outputDiv.innerText = "A estabelecer túnel encriptado...";
+            simularProgresso(1200, async () => {
+                let [novoEstado, mensagem] = await eel.toggle_vpn(vpnEstado, paisSelecionado)();
+                vpnEstado = novoEstado;
+                outputDiv.innerText = mensagem;
+
+                if (vpnEstado === "on") {
+                    vpnBtn.innerText = "🔓 Desligar VPN Neon";
+                    vpnBtn.style.borderColor = "#00ff66";
+                } else {
+                    vpnBtn.innerText = "🔒 Ligar VPN Neon";
+                    vpnBtn.style.borderColor = "#3a86ff";
+                }
+            });
+        }
+
+        async function adicionarPassword() {
+            let s = document.getElementById("pwdService").value;
+            let u = document.getElementById("pwdUser").value;
+            let p = document.getElementById("pwdPass").value;
+            let outputDiv = document.getElementById("output");
+
+            let resposta = await eel.guardar_password(s, u, p)();
+            outputDiv.innerText = resposta;
+            document.getElementById("pwdService").value = "";
+            document.getElementById("pwdUser").value = "";
+            document.getElementById("pwdPass").value = "";
+        }
+
+        async function verificarEmail() {
+            let email = document.getElementById("emailInput").value;
+            let outputDiv = document.getElementById("output");
+            outputDiv.innerText = "A pesquisar bases de dados da Dark Web...";
+
+            simularProgresso(1500, async () => {
+                let resposta = await eel.verificar_email_leak(email)();
+                outputDiv.innerText = resposta;
+            });
+        }
+
+        async function verificarPhishing() {
+            let texto = document.getElementById("phishingInput").value;
+            let outputDiv = document.getElementById("output");
+            outputDiv.innerText = "A analisar conteúdo com motor Anti-Phishing...";
+
+            simularProgresso(1200, async () => {
+                let resposta = await eel.analisar_phishing(texto)();
+                outputDiv.innerText = resposta;
+            });
+        }
+    </script>
+
+</body>
+</html>
