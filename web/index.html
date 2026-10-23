@@ -2,472 +2,486 @@
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
-    <title>Neon Security Suite</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Security Suite v3.0 - Pro</title>
     <script type="text/javascript" src="/eel.js"></script>
     <style>
         :root {
-            --bg-color: #0b0c10;
-            --sidebar-bg: #12141d;
-            --card-bg: #1f2833;
-            --neon-purple: #9d4edd;
-            --neon-glow: #c77dff;
+            --bg-dark: #070913;
+            --card-bg: #101426;
+            --neon-blue: #00f3ff;
             --neon-green: #00ff66;
-            --neon-blue: #3a86ff;
-            --neon-yellow: #ffcc00;
-            --text-color: #ffffff;
-            --text-muted: #c5c6c7;
+            --neon-purple: #c200ff;
+            --neon-purple-glow: #d848ff;
+            --neon-red: #ff4444;
+            --text-color: #e2e8f0;
+            --text-dim: #94a3b8;
         }
 
+        * { box-sizing: border-box; user-select: none; }
+
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-color);
             display: flex;
             height: 100vh;
             overflow: hidden;
         }
 
-        /* Menu Lateral (Sidebar) */
         .sidebar {
-            width: 240px;
-            background-color: var(--sidebar-bg);
-            border-right: 1px solid rgba(157, 78, 221, 0.2);
+            width: 260px;
+            background: rgba(16, 20, 38, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(194, 0, 255, 0.25);
             display: flex;
             flex-direction: column;
             padding: 20px 0;
+            flex-shrink: 0;
+            overflow-y: auto;
         }
 
         .brand {
-            padding: 0 20px 20px 20px;
-            border-bottom: 1px solid rgba(157, 78, 221, 0.2);
-        }
-
-        .brand h1 {
-            margin: 0;
-            font-size: 1.2rem;
-            letter-spacing: 2px;
-        }
-
-        .brand h1 span {
-            color: var(--neon-glow);
-            text-shadow: 0 0 10px var(--neon-purple);
-        }
-
-        .nav-menu {
-            list-style: none;
-            padding: 15px 0;
-            margin: 0;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--neon-purple-glow);
+            text-shadow: 0 0 12px var(--neon-purple);
+            text-align: center;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
         }
 
         .nav-item {
             padding: 12px 25px;
+            color: var(--text-dim);
             cursor: pointer;
+            transition: 0.3s;
             display: flex;
             align-items: center;
             gap: 12px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            transition: 0.2s ease;
-            border-left: 4px solid transparent;
+            font-size: 0.9rem;
         }
 
         .nav-item:hover, .nav-item.active {
             color: #fff;
-            background-color: rgba(157, 78, 221, 0.1);
-            border-left-color: var(--neon-purple);
+            background: rgba(194, 0, 255, 0.12);
+            border-left: 4px solid var(--neon-purple);
         }
 
-        .nav-item.active {
-            color: var(--neon-glow);
-        }
-
-        /* Conteúdo Principal */
         .main-content {
             flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 25px;
+            padding: 30px;
             overflow-y: auto;
         }
 
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            border-bottom: 1px solid rgba(157, 78, 221, 0.2);
-            padding-bottom: 15px;
-        }
-
-        .section-page {
-            display: none;
-            flex: 1;
-        }
-
-        .section-page.active {
-            display: block;
-        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
 
         .card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--neon-purple);
+            background: var(--card-bg);
+            border: 1px solid rgba(194, 0, 255, 0.12);
             border-radius: 12px;
             padding: 20px;
-            box-shadow: 0 0 15px rgba(157, 78, 221, 0.1);
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-header-flex { display: flex; align-items: center; justify-content: space-between; }
+
+        h2 {
+            margin-top: 0;
+            color: #fff;
+            font-size: 1.4rem;
+            border-bottom: 2px solid rgba(194, 0, 255, 0.3);
+            padding-bottom: 10px;
             margin-bottom: 20px;
         }
 
-        .card-title {
-            font-size: 0.9rem;
-            color: var(--neon-glow);
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border-bottom: 1px solid rgba(157, 78, 221, 0.3);
-            padding-bottom: 5px;
-        }
+        h3, h4 { margin-top: 0; color: var(--neon-purple-glow); }
 
-        .status-circle {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            border: 4px solid var(--neon-green);
-            box-shadow: 0 0 15px var(--neon-green);
-            margin: 10px auto 20px auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
-            font-size: 0.85rem;
-            color: var(--neon-green);
-        }
-
-        .action-btn {
-            background-color: transparent;
-            color: var(--neon-glow);
-            border: 2px solid var(--neon-purple);
-            padding: 10px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            box-shadow: 0 0 8px var(--neon-purple);
-            transition: 0.2s ease-in-out;
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        .action-btn:hover {
-            background-color: var(--neon-purple);
-            color: #fff;
-            box-shadow: 0 0 15px var(--neon-glow);
-        }
-
-        .vpn-btn {
-            border-color: var(--neon-blue);
-            color: #4cc9f0;
-            box-shadow: 0 0 8px var(--neon-blue);
-        }
-
-        .vpn-btn:hover {
-            background-color: var(--neon-blue);
-            color: #fff;
-        }
-
-        .clean-btn {
-            border-color: var(--neon-yellow);
-            color: #ffda33;
-            box-shadow: 0 0 8px var(--neon-yellow);
-        }
-
-        .clean-btn:hover {
-            background-color: var(--neon-yellow);
-            color: #0b0c10;
-        }
-
-        input[type="text"], input[type="password"], select {
-            width: 96%;
-            padding: 8px;
-            margin-top: 6px;
-            background: #0b0c10;
+        .btn-neon {
+            background: transparent;
+            color: var(--neon-purple-glow);
             border: 1px solid var(--neon-purple);
-            color: #fff;
+            padding: 10px 20px;
             border-radius: 6px;
-            font-size: 0.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(194, 0, 255, 0.2);
+            transition: 0.3s;
+            margin-right: 10px;
+            margin-top: 5px;
         }
 
-        /* Estilos da Barra de Progresso Néon */
+        .btn-neon:hover {
+            background: var(--neon-purple);
+            color: #fff;
+            box-shadow: 0 0 20px var(--neon-purple);
+        }
+
+        .btn-green { color: var(--neon-green); border-color: var(--neon-green); box-shadow: 0 0 10px rgba(0, 255, 102, 0.2); }
+        .btn-green:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 20px var(--neon-green); }
+
+        .btn-red { color: var(--neon-red); border-color: var(--neon-red); box-shadow: 0 0 10px rgba(255, 68, 68, 0.2); }
+        .btn-red:hover { background: var(--neon-red); color: #fff; box-shadow: 0 0 20px var(--neon-red); }
+
+        input, select {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(194, 0, 255, 0.3);
+            color: #fff;
+            padding: 10px;
+            border-radius: 6px;
+            width: 100%;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+
         .progress-container {
             width: 100%;
-            background-color: #0b0c10;
-            border-radius: 10px;
-            border: 1px solid var(--neon-purple);
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
             overflow: hidden;
+            height: 14px;
             margin-top: 15px;
-            display: none; /* Oculta por predefinição */
+            display: none;
+            border: 1px solid rgba(194, 0, 255, 0.3);
         }
 
         .progress-bar {
             width: 0%;
-            height: 12px;
-            background: linear-gradient(90deg, var(--neon-purple), var(--neon-glow), var(--neon-green));
-            box-shadow: 0 0 10px var(--neon-glow);
-            transition: width 0.2s ease;
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-purple), var(--neon-blue));
+            box-shadow: 0 0 12px var(--neon-purple);
+            transition: width 0.2s ease-in-out;
         }
 
-        #output {
-            margin-top: 10px;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            background: #0b0c10;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px dashed var(--neon-purple);
-            text-align: center;
-        }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.05); font-size: 0.9rem; }
+        th { color: var(--neon-purple-glow); }
+        code { background: rgba(0, 0, 0, 0.3); padding: 2px 6px; border-radius: 4px; color: var(--neon-blue); font-family: monospace; }
     </style>
 </head>
 <body>
 
-    <!-- Sidebar Menu -->
     <div class="sidebar">
-        <div class="brand">
-            <h1><span>NEON</span> SECURITY</h1>
-            <span style="font-size: 0.65rem; color: var(--text-muted);">Suite de Proteção v2.0</span>
-        </div>
-        <ul class="nav-menu">
-            <li class="nav-item active" onclick="mostrarPagina('dashboard', this)">🏠 Visão Geral</li>
-            <li class="nav-item" onclick="mostrarPagina('antivirus', this)">🛡️ Motor Antivírus</li>
-            <li class="nav-item" onclick="mostrarPagina('vpn', this)">🌐 Rede & VPN</li>
-            <li class="nav-item" onclick="mostrarPagina('passwords', this)">🔑 Passwords & Leaks</li>
-            <li class="nav-item" onclick="mostrarPagina('cleaner', this)">🧹 Otimização de PC</li>
-            <li class="nav-item" onclick="mostrarPagina('phishing', this)">🎣 Deteção de Phishing</li>
-        </ul>
+        <div class="brand">⚡ NEON SECURITY</div>
+        <div class="nav-item active" onclick="switchTab(this, 'antivirus')">🛡️ Antivírus</div>
+        <div class="nav-item" onclick="switchTab(this, 'cleaner')">🧹 Limpeza</div>
+        <div class="nav-item" onclick="switchTab(this, 'vpn')">🌐 VPN Protegida</div>
+        <div class="nav-item" onclick="switchTab(this, 'email-phishing')">📧 Guardião de Email</div>
+        <div class="nav-item" onclick="switchTab(this, 'passwords')">🔑 Gestor de Passwords</div>
+        <div class="nav-item" onclick="switchTab(this, 'firewall')">💻 Firewall / Conexões</div>
+        <div class="nav-item" onclick="switchTab(this, 'ransomware')">🔒 Escudo Anti-Ransomware</div>
+        <div class="nav-item" onclick="switchTab(this, 'safe-browser')">💳 Navegação Bancária</div>
+        <div class="nav-item" onclick="switchTab(this, 'settings')">⚙️ Definições & Conta</div>
     </div>
 
-    <!-- Conteúdo das Páginas -->
     <div class="main-content">
-        <header>
-            <h2 id="page-title" style="margin: 0; font-size: 1.2rem;">Painel Principal</h2>
-            <div style="font-size: 0.8rem; color: var(--neon-green); font-weight: bold;">● Sistema Protegido</div>
-        </header>
-
-        <!-- Página 1: Dashboard -->
-        <div id="dashboard" class="section-page active">
-            <div class="card" style="text-align: center;">
-                <div class="status-circle" id="status-text">PROTEGIDO</div>
-                <h3 style="margin-top: 0;">O seu sistema está seguro e protegido.</h3>
-                <p style="color: var(--text-muted); font-size: 0.8rem;">Todas as proteções do Neon Security estão operacionais em segundo plano.</p>
-                <div style="display: flex; gap: 15px; margin-top: 20px;">
-                    <button class="action-btn" onclick="iniciarVerificacao('quick')">⚡ Verificação Rápida</button>
-                    <button class="action-btn" onclick="iniciarVerificacao('full')">🔍 Verificação Completa</button>
+        
+        <!-- 1. ANTIVÍRUS -->
+        <div id="antivirus" class="tab-content active">
+            <h2>Proteção Antivírus</h2>
+            <div class="card card-header-flex" id="realtime-card" style="border-left: 4px solid var(--neon-green);">
+                <div>
+                    <h3 style="margin: 0; color: #fff;">Proteção em Tempo Real</h3>
+                    <p style="margin: 5px 0 0 0; color: var(--text-dim); font-size: 0.85rem;">Monitorização contínua de ficheiros e processos ativos no sistema.</p>
                 </div>
+                <div><button id="realtime-btn" class="btn-neon btn-green" onclick="toggleRealtime()">ATIVADO</button></div>
+            </div>
+            
+            <div class="card">
+                <h3>Análise do Sistema</h3>
+                <button class="btn-neon" onclick="startScan('quick')">Análise Rápida</button>
+                <button class="btn-neon" onclick="startScan('full')">Análise Completa</button>
+                
+                <div id="scan-progress-box" class="progress-container">
+                    <div id="scan-progress-bar" class="progress-bar"></div>
+                </div>
+                <p id="scan-status" style="margin-top: 15px; font-weight: bold;"></p>
+            </div>
+
+            <div class="card">
+                <h3>Análise Personalizada</h3>
+                <p style="color: var(--text-dim); font-size: 0.85rem;">Insira o caminho completo para a pasta ou ficheiro a analisar:</p>
+                <input type="text" id="custom-path-input" placeholder="C:\Users\Nome\Desktop\ficheiro.exe">
+                <button class="btn-neon" onclick="runCustomScan()">Iniciar Análise</button>
+                <p id="custom-scan-status" style="margin-top: 15px; font-weight: bold;"></p>
             </div>
         </div>
 
-        <!-- Página 2: Antivírus -->
-        <div id="antivirus" class="section-page">
+        <!-- 2. LIMPEZA -->
+        <div id="cleaner" class="tab-content">
+            <h2>Limpeza e Otimização do Sistema</h2>
             <div class="card">
-                <div class="card-title">Análise de Sistema & Personalizada</div>
-                <p style="font-size: 0.8rem; color: var(--text-muted);">Verifique o sistema completo ou escolha uma diretoria específica para procurar malware e scripts maliciosos.</p>
-                <button class="action-btn" onclick="iniciarVerificacao('quick')">⚡ Verificação Rápida</button>
-                <button class="action-btn" onclick="iniciarVerificacao('full')">🔍 Verificação Completa</button>
-                <div style="margin-top: 15px;">
-                    <input type="text" id="customPath" placeholder="Caminho para análise personalizada (ex: C:\MinhaPasta ou D:\)">
-                    <button class="action-btn" onclick="iniciarVerificacao('custom')">📂 Executar Verificação Personalizada</button>
-                </div>
+                <p style="color: var(--text-dim);">Elimine ficheiros temporários, cache e liberto espaço em disco para acelerar o sistema.</p>
+                <button class="btn-neon" onclick="runCleaner()">Executar Limpeza</button>
+                <p id="cleaner-status" style="margin-top: 15px; font-weight: bold;"></p>
             </div>
         </div>
 
-        <!-- Página 3: VPN -->
-        <div id="vpn" class="section-page">
+        <!-- 3. VPN -->
+        <div id="vpn" class="tab-content">
+            <h2>VPN Segura & Anónima</h2>
             <div class="card">
-                <div class="card-title">VPN Neon & Encriptação de Rede</div>
-                <p style="font-size: 0.8rem; color: var(--text-muted);">Especifique o país do servidor para mascarar o seu IP e encriptar todo o tráfego da rede.</p>
-                <label style="font-size: 0.8rem;">Selecione o Servidor:</label>
-                <select id="vpnCountry">
-                    <option value="Portugal">🇵🇹 Portugal (Servidor Lisboa)</option>
-                    <option value="Espanha">🇪🇸 Espanha (Servidor Madrid)</option>
-                    <option value="Alemanha">🇩🇪 Alemanha (Servidor Frankfurt)</option>
-                    <option value="EUA">🇺🇸 EUA (Servidor Nova Iorque)</option>
+                <p style="color: var(--text-dim);">Tráfego e largura de banda: <strong style="color: var(--neon-green);">ILIMITADO</strong></p>
+                <label>Selecionar Servidor:</label>
+                <select id="vpn-server">
+                    <option value="Portugal - Lisboa">🇵🇹 Portugal (Lisboa)</option>
+                    <option value="Espanha - Madrid">🇪🇸 Espanha (Madrid)</option>
+                    <option value="Alemanha - Frankfurt">🇩🇪 Alemanha (Frankfurt)</option>
+                    <option value="EUA - Nova Iorque">🇺🇸 EUA (Nova Iorque)</option>
                 </select>
-                <button class="action-btn vpn-btn" id="vpnBtn" onclick="alternarVpn()" style="margin-top: 15px;">🔒 Ligar VPN Neon</button>
+                <button id="vpn-btn" class="btn-neon btn-red" onclick="toggleVpnConnection()">DESLIGADO</button>
+                <p id="vpn-status" style="margin-top: 15px; font-weight: bold;"></p>
             </div>
         </div>
 
-        <!-- Página 4: Passwords & Leaks -->
-        <div id="passwords" class="section-page">
+        <!-- 4. GUARDIÃO DE EMAIL & ANTI-PHISHING -->
+        <div id="email-phishing" class="tab-content">
+            <h2>Guardião de Email & Proteção Anti-Phishing</h2>
+            
             <div class="card">
-                <div class="card-title">Gestor de Passwords Encriptado</div>
-                <input type="text" id="pwdService" placeholder="Serviço (ex: Gmail)">
-                <input type="text" id="pwdUser" placeholder="Utilizador / Email">
-                <input type="password" id="pwdPass" placeholder="Password secreta">
-                <button class="action-btn" onclick="adicionarPassword()">Guardar Credencial Segura</button>
+                <h3>Verificação de Email (Dark Web Monitor)</h3>
+                <p style="color: var(--text-dim);">Verifique se a sua conta foi exposta em fugas de dados globais.</p>
+                <input type="email" id="check-email-input" placeholder="exemplo@gmail.com">
+                <button class="btn-neon" onclick="verifyEmailLeak()">Verificar Email</button>
+                <div id="email-result" style="margin-top: 15px; font-weight: bold;"></div>
             </div>
+
             <div class="card">
-                <div class="card-title">Guardião de Fugas (Dark Web)</div>
-                <input type="text" id="emailInput" placeholder="Insira o seu email para pesquisa...">
-                <button class="action-btn" onclick="verificarEmail()">Pesquisar Vazamentos na Dark Web</button>
+                <h3>Proteção Anti-Phishing (URL Checker)</h3>
+                <p style="color: var(--text-dim);">Verifique a segurança e legitimidade de links ou websites suspeitos.</p>
+                <input type="text" id="phishing-url-input" placeholder="https://exemplo-banco-login.com">
+                <button class="btn-neon" onclick="verifyPhishingUrl()">Verificar URL</button>
+                <div id="phishing-result" style="margin-top: 15px; font-weight: bold;"></div>
             </div>
         </div>
 
-        <!-- Página 5: Cleaner -->
-        <div id="cleaner" class="section-page">
+        <!-- 5. GESTOR DE PASSWORDS -->
+        <div id="passwords" class="tab-content">
+            <h2>Cofre de Palavras-Passe</h2>
             <div class="card">
-                <div class="card-title">Otimizador de Espaço em Disco</div>
-                <p style="font-size: 0.8rem; color: var(--text-muted);">Remove ficheiros temporários, cache do sistema e ficheiros residuais para libertar armazenamento e melhorar a velocidade.</p>
-                <button class="action-btn clean-btn" onclick="executarLimpeza()">🗑️ Iniciar Limpeza de Ficheiros Temporários</button>
+                <h3>Guardar Nova Credencial</h3>
+                <input type="text" id="pw-site" placeholder="Site ou Aplicação (ex: netflix.com)">
+                <input type="text" id="pw-user" placeholder="Utilizador / Email">
+                <input type="password" id="pw-pass" placeholder="Palavra-passe">
+                <button class="btn-neon" onclick="saveNewPassword()">Guardar Palavra-Passe</button>
+                <p id="pw-status" style="margin-top: 10px;"></p>
+            </div>
+            <div class="card">
+                <h3>Credenciais Guardadas</h3>
+                <button class="btn-neon" onclick="loadPasswords()">Atualizar Lista</button>
+                <table>
+                    <thead><tr><th>Serviço</th><th>Utilizador</th><th>Password</th></tr></thead>
+                    <tbody id="pw-table-body"><tr><td colspan="3">Clica em atualizar para carregar.</td></tr></tbody>
+                </table>
             </div>
         </div>
 
-        <!-- Página 6: Phishing -->
-        <div id="phishing" class="section-page">
+        <!-- 6. FIREWALL -->
+        <div id="firewall" class="tab-content">
+            <h2>Firewall & Ligações de Rede</h2>
             <div class="card">
-                <div class="card-title">Deteção Inteligente de Phishing</div>
-                <p style="font-size: 0.8rem; color: var(--text-muted);">Cole um endereço URL ou o texto de um email suspeito para verificar padrões de burla cibernética.</p>
-                <input type="text" id="phishingInput" placeholder="Cole aqui o link ou o conteúdo da mensagem suspeita...">
-                <button class="action-btn" onclick="verificarPhishing()">Analisar com Motor Anti-Phishing</button>
+                <button class="btn-neon" onclick="loadConnections()">Atualizar Ligações Ativas</button>
+                <table>
+                    <thead><tr><th>Processo</th><th>PID</th><th>IP Local</th><th>IP Remoto</th><th>Estado</th></tr></thead>
+                    <tbody id="net-table-body"><tr><td colspan="5">Clica no botão para mapear ligações.</td></tr></tbody>
+                </table>
             </div>
         </div>
 
-        <!-- Barra de Progresso e Consola de Saída -->
-        <div class="progress-container" id="progressContainer">
-            <div class="progress-bar" id="progressBar"></div>
+        <!-- 7. ANTI-RANSOMWARE -->
+        <div id="ransomware" class="tab-content">
+            <h2>Escudo Anti-Ransomware</h2>
+            <div class="card" id="ransomware-card" style="border-left: 4px solid var(--neon-green);">
+                <p>Estado: <strong style="color: var(--neon-green);">ATIVO E PROTEGIDO</strong></p>
+                <p style="color: var(--text-dim);">Bloqueio automático contra encriptação e modificação de ficheiros críticos.</p>
+            </div>
         </div>
-        <div id="output">Sistema operacional e pronto para ações.</div>
+
+        <!-- 8. NAVEGAÇÃO BANCÁRIA -->
+        <div id="safe-browser" class="tab-content">
+            <h2>Navegação Bancária Segura</h2>
+            <div class="card">
+                <p>Abre uma janela de navegação isolada para transações financeiras e compras online seguras.</p>
+                <button class="btn-neon" onclick="openSafeBrowser()">Abrir Navegador Seguro</button>
+                <p id="browser-status" style="margin-top: 15px; font-weight: bold;"></p>
+            </div>
+        </div>
+
+        <!-- 9. DEFINIÇÕES & CONTA -->
+        <div id="settings" class="tab-content">
+            <h2>Definições & Conta de Utilizador</h2>
+            <div class="card">
+                <h3>Estado da Licença</h3>
+                <p style="color: var(--text-dim);">Tipo de Conta: <strong style="color: var(--neon-purple-glow); font-size: 1.1rem;">PREMIUM VITALÍCIO ⚡</strong></p>
+                <p style="color: var(--text-dim);">Estado: <strong style="color: var(--neon-green);">Ativo e Verificado</strong></p>
+                <p style="color: var(--text-dim); margin-top: 15px;">Acesso total e irrestrito a todos os módulos avançados, atualizações de motor e largura de banda ilimitada na VPN.</p>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        let vpnEstado = "off";
-
-        function mostrarPagina(paginaId, elementoMenu) {
-            let paginas = document.querySelectorAll('.section-page');
-            paginas.forEach(p => p.classList.remove('active'));
-
-            let itensMenu = document.querySelectorAll('.nav-item');
-            itensMenu.forEach(item => item.classList.remove('active'));
-
-            document.getElementById(paginaId).classList.add('active');
-            elementoMenu.classList.add('active');
-
-            document.getElementById('page-title').innerText = elementoMenu.innerText;
+        function switchTab(element, tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            if (element) element.classList.add('active');
         }
 
-        // Função para animar a barra de progresso
-        function simularProgresso(tempoTotalMs, aoTerminar) {
-            let container = document.getElementById("progressContainer");
-            let bar = document.getElementById("progressBar");
-            container.style.display = "block";
-            bar.style.width = "0%";
+        async function startScan(type) {
+            let status = document.getElementById('scan-status');
+            let progressBox = document.getElementById('scan-progress-box');
+            let progressBar = document.getElementById('scan-progress-bar');
 
-            let progresso = 0;
-            let intervaloTempo = 50;
-            let incremento = (100 / (tempoTotalMs / intervaloTempo));
+            progressBox.style.display = 'block';
+            progressBar.style.width = '5%';
+            status.style.color = "var(--neon-purple-glow)";
+            status.innerText = type === 'quick' ? "Análise Rápida a decorrer..." : "Análise Completa a decorrer...";
 
-            let timer = setInterval(() => {
-                progresso += incremento;
-                if (progresso >= 100) {
-                    progresso = 100;
-                    bar.style.width = progresso + "%";
-                    clearInterval(timer);
-                    setTimeout(() => {
-                        container.style.display = "none";
-                        bar.style.width = "0%";
-                        if (aoTerminar) aoTerminar();
-                    }, 400);
-                } else {
-                    bar.style.width = progresso + "%";
+            let progress = 5;
+            let progressInterval = setInterval(() => {
+                if (progress < 90) {
+                    progress += Math.floor(Math.random() * 8) + 2;
+                    if (progress > 90) progress = 90;
+                    progressBar.style.width = progress + '%';
                 }
-            }, intervaloTempo);
+            }, 150);
+
+            let res = type === 'quick' ? await eel.run_quick_scan()() : await eel.run_full_scan()();
+
+            clearInterval(progressInterval);
+            progressBar.style.width = '100%';
+
+            setTimeout(() => {
+                progressBox.style.display = 'none';
+                progressBar.style.width = '0%';
+                status.style.color = "var(--neon-green)";
+                status.innerText = "Concluído: " + res.message;
+            }, 350);
         }
 
-        async function iniciarVerificacao(tipo) {
-            let outputDiv = document.getElementById("output");
-            let statusCircle = document.getElementById("status-text");
-            let caminhoCustom = document.getElementById("customPath") ? document.getElementById("customPath").value : "";
+        async function runCustomScan() {
+            let path = document.getElementById('custom-path-input').value;
+            let status = document.getElementById('custom-scan-status');
+            if (!path) {
+                status.style.color = "var(--neon-red)";
+                status.innerText = "Por favor, introduza um caminho válido.";
+                return;
+            }
+            status.style.color = "var(--neon-purple-glow)";
+            status.innerText = "A analisar caminho...";
+            let res = await eel.run_custom_scan(path)();
+            status.style.color = res.threats_found > 0 ? "var(--neon-red)" : "var(--neon-green)";
+            status.innerText = res.message;
+        }
 
-            outputDiv.innerText = "A inicializar motor anti-malware...";
-            statusCircle.style.borderColor = "#ffcc00";
-            statusCircle.style.color = "#ffcc00";
-            statusCircle.innerText = "A VARRER";
+        async function runCleaner() {
+            let status = document.getElementById('cleaner-status');
+            status.style.color = "var(--neon-purple-glow)";
+            status.innerText = "A analisar ficheiros desnecessários e cache...";
+            let res = await eel.run_system_cleaner()();
+            status.style.color = "var(--neon-green)";
+            status.innerText = res.message;
+        }
 
-            simularProgresso(2500, async () => {
-                let resposta = await eel.executar_scan(tipo, caminhoCustom)();
-                outputDiv.innerText = resposta;
-                statusCircle.style.borderColor = "#00ff66";
-                statusCircle.style.color = "#00ff66";
-                statusCircle.innerText = "PROTEGIDO";
+        let vpnConnected = false;
+        async function toggleVpnConnection() {
+            let server = document.getElementById('vpn-server').value;
+            let btn = document.getElementById('vpn-btn');
+            vpnConnected = !vpnConnected;
+            let res = await eel.toggle_vpn(vpnConnected, server)();
+            document.getElementById('vpn-status').innerText = res.message;
+            
+            if (vpnConnected) {
+                btn.innerText = "LIGADO";
+                btn.className = "btn-neon btn-green";
+            } else {
+                btn.innerText = "DESLIGADO";
+                btn.className = "btn-neon btn-red";
+            }
+        }
+
+        async function verifyEmailLeak() {
+            let email = document.getElementById('check-email-input').value;
+            let resDiv = document.getElementById('email-result');
+            resDiv.innerHTML = "A consultar bases de dados...";
+            let res = await eel.check_email_leak(email)();
+            resDiv.style.color = res.leaked ? "var(--neon-red)" : "var(--neon-green)";
+            resDiv.innerText = res.message;
+        }
+
+        async function verifyPhishingUrl() {
+            let url = document.getElementById('phishing-url-input').value;
+            let resDiv = document.getElementById('phishing-result');
+            resDiv.innerHTML = "A verificar reputação do link...";
+            let res = await eel.check_phishing_url(url)();
+            resDiv.style.color = !res.safe ? "var(--neon-red)" : "var(--neon-green)";
+            resDiv.innerText = res.message;
+        }
+
+        async function toggleRealtime() {
+            let btn = document.getElementById('realtime-btn');
+            let card = document.getElementById('realtime-card');
+            let active = btn.innerText === "ATIVADO";
+            let res = await eel.toggle_realtime_protection(!active)();
+            
+            if (res.active) {
+                btn.innerText = "ATIVADO";
+                btn.className = "btn-neon btn-green";
+                card.style.borderLeft = "4px solid var(--neon-green)";
+            } else {
+                btn.innerText = "DESATIVADO";
+                btn.className = "btn-neon btn-red";
+                card.style.borderLeft = "4px solid var(--neon-red)";
+            }
+        }
+
+        async function saveNewPassword() {
+            let site = document.getElementById('pw-site').value;
+            let user = document.getElementById('pw-user').value;
+            let pass = document.getElementById('pw-pass').value;
+            let status = document.getElementById('pw-status');
+            if (!site || !user || !pass) {
+                status.style.color = "var(--neon-red)";
+                status.innerText = "Preencha todos os campos.";
+                return;
+            }
+            let res = await eel.save_password(site, user, pass)();
+            status.style.color = "var(--neon-green)";
+            status.innerText = res.message;
+            loadPasswords();
+        }
+
+        async function loadPasswords() {
+            let tbody = document.getElementById('pw-table-body');
+            let data = await eel.get_saved_passwords()();
+            tbody.innerHTML = '';
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3">O cofre está vazio.</td></tr>';
+                return;
+            }
+            data.forEach(p => {
+                tbody.innerHTML += `<tr><td><strong>${p.site}</strong></td><td>${p.username}</td><td><code>••••••••</code></td></tr>`;
             });
         }
 
-        async function executarLimpeza() {
-            let outputDiv = document.getElementById("output");
-            outputDiv.innerText = "A analisar e a remover ficheiros temporários...";
-
-            simularProgresso(1800, async () => {
-                let resposta = await eel.limpar_sistema()();
-                outputDiv.innerText = resposta;
+        async function loadConnections() {
+            let tbody = document.getElementById('net-table-body');
+            tbody.innerHTML = '<tr><td colspan="5">A carregar ligações...</td></tr>';
+            let conns = await eel.get_active_connections()();
+            tbody.innerHTML = '';
+            conns.forEach(c => {
+                tbody.innerHTML += `<tr><td><strong>${c.process}</strong></td><td><code>${c.pid}</code></td><td>${c.local_ip}</td><td>${c.remote_ip}</td><td><span style="color:var(--neon-green);">${c.status}</span></td></tr>`;
             });
         }
 
-        async function alternarVpn() {
-            let outputDiv = document.getElementById("output");
-            let vpnBtn = document.getElementById("vpnBtn");
-            let paisSelecionado = document.getElementById("vpnCountry").value;
-
-            outputDiv.innerText = "A estabelecer túnel encriptado...";
-            simularProgresso(1200, async () => {
-                let [novoEstado, mensagem] = await eel.toggle_vpn(vpnEstado, paisSelecionado)();
-                vpnEstado = novoEstado;
-                outputDiv.innerText = mensagem;
-
-                if (vpnEstado === "on") {
-                    vpnBtn.innerText = "🔓 Desligar VPN Neon";
-                    vpnBtn.style.borderColor = "#00ff66";
-                } else {
-                    vpnBtn.innerText = "🔒 Ligar VPN Neon";
-                    vpnBtn.style.borderColor = "#3a86ff";
-                }
-            });
-        }
-
-        async function adicionarPassword() {
-            let s = document.getElementById("pwdService").value;
-            let u = document.getElementById("pwdUser").value;
-            let p = document.getElementById("pwdPass").value;
-            let outputDiv = document.getElementById("output");
-
-            let resposta = await eel.guardar_password(s, u, p)();
-            outputDiv.innerText = resposta;
-            document.getElementById("pwdService").value = "";
-            document.getElementById("pwdUser").value = "";
-            document.getElementById("pwdPass").value = "";
-        }
-
-        async function verificarEmail() {
-            let email = document.getElementById("emailInput").value;
-            let outputDiv = document.getElementById("output");
-            outputDiv.innerText = "A pesquisar bases de dados da Dark Web...";
-
-            simularProgresso(1500, async () => {
-                let resposta = await eel.verificar_email_leak(email)();
-                outputDiv.innerText = resposta;
-            });
-        }
-
-        async function verificarPhishing() {
-            let texto = document.getElementById("phishingInput").value;
-            let outputDiv = document.getElementById("output");
-            outputDiv.innerText = "A analisar conteúdo com motor Anti-Phishing...";
-
-            simularProgresso(1200, async () => {
-                let resposta = await eel.analisar_phishing(texto)();
-                outputDiv.innerText = resposta;
-            });
+        async function openSafeBrowser() {
+            let res = await eel.launch_safe_browser("https://www.google.com")();
+            document.getElementById('browser-status').innerText = res.message;
         }
     </script>
-
 </body>
 </html>
