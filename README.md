@@ -1,0 +1,1 @@
+quero criar um antivirus gratis e de codigo aberto para todos com tudo em 1 para windows e android inicialmente, teria versão gratis so com alguns ads e premium mensal e anual ou vitalcio mas mesmo no free teria se acesso a tudo so havendo limite na vpn e proteção em tempo real desativada mas de resto e é isso vou arrumando ao longo do tempo que tenha livre 
